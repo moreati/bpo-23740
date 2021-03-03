@@ -68,6 +68,9 @@ def main():
         results_file.parent.mkdir(parents=True, exist_ok=True)
         results_file.write_bytes(response_body)
 
+    version_file = args.results_base / 'version.txt'
+    version_file.write_text(sys.version + '\n')
+
 
 if __name__ == '__main__':
     sys.exit(main())
