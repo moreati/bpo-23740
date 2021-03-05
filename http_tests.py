@@ -77,7 +77,7 @@ def main():
             conn = client(url.netloc)
 
         try:
-            conn.request('PUT', f'/path/{i}', body)
+            conn.request('PUT', '/path/', body)
         except Exception as err:
             print(f'{i:>2}. ERR {name} {err!r}')
             continue

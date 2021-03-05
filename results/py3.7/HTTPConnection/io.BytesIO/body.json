@@ -1,6 +1,6 @@
 {
   "command": "PUT",
-  "path": "/path/2",
+  "path": "/path/",
   "version": "HTTP/1.1",
   "headers": [
     [
@@ -18,7 +18,7 @@
   ],
   "content": "abc\r\ndef\r\n",
   "raw": {
-    "requestline": "PUT /path/2 HTTP/1.1\r\n",
+    "requestline": "PUT /path/ HTTP/1.1\r\n",
     "headers": "Host: localhost:8000\r\nAccept-Encoding: identity\r\nTransfer-Encoding: chunked\r\n\r\n",
     "content": "A\r\nabc\r\ndef\r\n\r\n0\r\n\r\n"
   }
