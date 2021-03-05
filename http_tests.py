@@ -64,7 +64,7 @@ def main():
                         default='results')
     args = parser.parse_args()
 
-    for i, case in enumerate(TEST_CASES):
+    for i, case in enumerate(TEST_CASES, start=1):
         client_name, url, client, name, body = case
         results_file = args.results_base / client_name / name / 'body.json'
         url = urllib.parse.urlparse(url)
