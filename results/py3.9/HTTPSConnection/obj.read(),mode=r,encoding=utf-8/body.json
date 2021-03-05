@@ -1,0 +1,25 @@
+{
+  "command": "PUT",
+  "path": "/path/22",
+  "version": "HTTP/1.1",
+  "headers": [
+    [
+      "Host",
+      "localhost:8443"
+    ],
+    [
+      "Accept-Encoding",
+      "identity"
+    ],
+    [
+      "Transfer-Encoding",
+      "chunked"
+    ]
+  ],
+  "content": "",
+  "raw": {
+    "requestline": "PUT /path/22 HTTP/1.1\r\n",
+    "headers": "Host: localhost:8443\r\nAccept-Encoding: identity\r\nTransfer-Encoding: chunked\r\n\r\n",
+    "content": "0\r\n\r\n"
+  }
+}

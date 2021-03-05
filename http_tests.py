@@ -6,8 +6,8 @@ Submit http requests with different types supplied as the content
 import argparse
 import http.client
 import io
-import os
 import pathlib
+import ssl
 import sys
 import urllib.parse
 
@@ -23,8 +23,13 @@ class Readable:
         return self.fp.read(size)
 
 
+TEST_CLIENTS = {
+    'HTTPConnection': ('http://localhost:8000', http.client.HTTPConnection),
+    'HTTPSConnection': ('https://localhost:8443', http.client.HTTPSConnection),
+}
 
-TEST_CASES = {
+
+TEST_DATAS = {
     'bytearray': bytearray(b'abc\r\ndef\r\n'),
     'bytes': b'abc\r\ndef\r\n',
     'io.BytesIO': io.BytesIO(b'abc\r\ndef\r\n'),
@@ -41,19 +46,35 @@ TEST_CASES = {
 }
 
 
+TEST_CASES = [
+    (client_name, url, client, case_name, data)
+    for client_name, (url, client) in TEST_CLIENTS.items()
+    for case_name, data in TEST_DATAS.items()
+]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--url',
-                        type=urllib.parse.urlparse,
-                        default='http://localhost:8000')
+    parser.add_argument('--cafile', metavar='PATH',
+                        type=pathlib.Path,
+                        default='rootCA.pem',
+                        help="CA certificate(s) file (default: %(default)s)")
     parser.add_argument('--results-base', metavar='PATH',
                         type=pathlib.Path,
                         default='results')
     args = parser.parse_args()
 
-    for i, (name, body) in enumerate(TEST_CASES.items()):
-        results_file = args.results_base / name / 'body.json'
-        conn = http.client.HTTPConnection(args.url.netloc)
+    for i, case in enumerate(TEST_CASES):
+        client_name, url, client, name, body = case
+        results_file = args.results_base / client_name / name / 'body.json'
+        url = urllib.parse.urlparse(url)
+        if url.scheme == 'https':
+            ssl_context = ssl.create_default_context(
+                cafile=args.cafile.expanduser(),
+            )
+            conn = client(url.netloc, context=ssl_context)
+        else:
+            conn = client(url.netloc)
 
         try:
             conn.request('PUT', f'/path/{i}', body)
